@@ -1,0 +1,11 @@
+[package]
+name = "wsp-methods-derive"
+version = "0.1.0"
+authors = ["Robby Madruga <rmadruga@illumtechnology.com>"]
+
+[lib]
+plugin = true
+
+[dependencies]
+serde = "1.0.15"
+serde_json = "1.0"
