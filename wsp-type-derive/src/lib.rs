@@ -1,3 +1,5 @@
+#![recursion_limit="128"]
+
 extern crate proc_macro;
 use proc_macro::TokenStream;
 
@@ -26,6 +28,10 @@ fn expanded_impl(ast: &syn::DeriveInput) -> quote::Tokens {
 
     quote! {
         impl WSPType for #name {
+            fn get_name() -> String {
+                String::from(stringify!(#name))
+            }
+
             fn get_type() -> serde_json::Value {
                 serde_json::Value::Object(
                     {
@@ -66,7 +72,15 @@ pub fn wsp_service_macro(input: TokenStream) -> TokenStream {
     let expanded_impl = quote! {
         impl WSPService for #name {
             fn get_service() -> Value {
-                Value::String(String::new())
+                Value::Object(
+                    {
+                        let mut map = serde_json::Map::new();
+                        map.insert(String::from("type"), Value::String(String::from("jsonwsp/description")));
+                        map.insert(String::from("version"), Value::String(String::from("1.0")));
+                        map.insert(String::from("servicename"), Value::String(String::from(stringify!(#name))));
+                        map
+                    }
+                )
             }
         }
     };

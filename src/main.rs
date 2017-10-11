@@ -12,6 +12,7 @@ use serde_json::map::{Map};
 
 
 trait WSPType {
+    fn get_name() -> String;
     fn get_type() -> Value;
 }
 
@@ -113,9 +114,14 @@ trait WSPService {
 #[derive(WSPService)]
 struct UserService;
 
+trait WSPMethods {
+    fn get_types() -> Value;
+    fn get_methods() -> Value;
+}
+
 #[derive(WSPMethods)]
 impl UserService {
-    #[WSPMethod]
+    #[WSPMethod(User, Other)]
     fn listUsers(name_filter: String) -> Vec<User> {
         unimplemented!();
     }
@@ -130,7 +136,5 @@ impl UserService {
 }
 
 fn main() {
-    println!("{}", Group::get_type().to_string());
-    println!("{}", User::get_type().to_string());
-    println!("{}", CreateUserResponse::get_type().to_string());
+    println!("{}", UserService::get_service().to_string());
 }
